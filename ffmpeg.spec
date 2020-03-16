@@ -14,17 +14,26 @@
 #   --enable-libxavs        libxavs-devel
 #   --enable-pocketsphinx   pkgconfig(pocketsphinx)
 
+%global commit0 c467328f0777fd6282273c5fe43096a0924ff3b3
+%global date 20200315
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+
 Summary:        A complete solution to record, convert and stream audio and video
 Name:           ffmpeg
-Version:        4.2.2
-Release:        4%{?dist}
+Version:        4.3.0
+Release:        1%{?shortcommit0:.%{date}git%{shortcommit0}}%{?dist}
 License:        LGPLv3+
 URL:            http://%{name}.org/
 Epoch:          1
 
+%if %{?shortcommit0}
+Source0:        %{name}-%{shortcommit0}.tar.xz
+Source1:        %{name}-snapshot.sh
+%else
 Source0:        http://%{name}.org/releases/%{name}-%{version}.tar.xz
+%endif
 # Excerpt from Nvidia's Video Codec SDK document: Using_FFmpeg_with_NVIDIA_GPU_Hardware_Acceleration.pdf
-Source1:        using_ffmpeg_with_nvidia_gpus.txt
+Source10:       using_ffmpeg_with_nvidia_gpus.txt
 
 Requires:       %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 
@@ -172,8 +181,12 @@ and video, MPEG4, h263, ac3, asf, avi, real, mjpeg, and flash.
 This package contains development files for %{name}.
 
 %prep
-%setup -q
-cp %{SOURCE1} .
+%if %{?shortcommit0}
+%autosetup -n %{name}-%{commit0}
+%else
+%autosetup
+%endif
+cp %{SOURCE10} .
 
 # Uncomment to enable debugging while configuring
 #sed -i -e 's|#!/bin/sh|#!/bin/sh -x|g' configure
@@ -327,7 +340,8 @@ cp %{SOURCE1} .
 %endif
 %endif
 
-%make_build
+#%make_build
+make build
 make documentation
 make alltools
 
@@ -370,6 +384,9 @@ mv doc/*.html doc/html
 %{_libdir}/lib*.so
 
 %changelog
+* Mon Mar 16 2020 Simone Caronni <negativo17@gmail.com> - 1:4.3.0-1.20200315gitc467328
+- Update to 4.3.0 snapshot from master.
+
 * Sun Mar 15 2020 Simone Caronni <negativo17@gmail.com> - 1:4.2.2-4
 - Fix build on Fedora 32.
 
