@@ -27,6 +27,7 @@ Source0:        http://%{name}.org/releases/%{name}-%{version}.tar.xz
 Source1:        using_ffmpeg_with_nvidia_gpus.txt
 
 Patch0:         http://git.videolan.org/?p=ffmpeg.git;a=patch;h=0b2b03568f22fdb361d9a44c262bfb9269335f80#/ffmpeg-nasm.patch
+Patch1:         0001-fix-crypto-policy-non-compliance-gnutls.patch
 
 Requires:       %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 

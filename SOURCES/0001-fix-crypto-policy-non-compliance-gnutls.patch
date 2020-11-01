@@ -1,0 +1,25 @@
+From 7964f86431a2618a16ba8334da4ab462c79f0bf1 Mon Sep 17 00:00:00 2001
+From: Markus Linnala <markus.linnala@gmail.com>
+Date: Sun, 1 Nov 2020 11:54:54 +0200
+Subject: [PATCH] fix crypto-policy-non-compliance-gnutls
+
+---
+ libavformat/tls_gnutls.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libavformat/tls_gnutls.c b/libavformat/tls_gnutls.c
+index 0c4ef34..a02436e 100644
+--- a/libavformat/tls_gnutls.c
++++ b/libavformat/tls_gnutls.c
+@@ -180,7 +180,7 @@ static int tls_open(URLContext *h, const char *uri, int flags, AVDictionary **op
+     gnutls_transport_set_pull_function(p->session, gnutls_url_pull);
+     gnutls_transport_set_push_function(p->session, gnutls_url_push);
+     gnutls_transport_set_ptr(p->session, c->tcp);
+-    gnutls_priority_set_direct(p->session, "NORMAL", NULL);
++    gnutls_set_default_priority(p->session);
+     do {
+         if (ff_check_interrupt(&h->interrupt_callback)) {
+             ret = AVERROR_EXIT;
+-- 
+2.28.0
+
